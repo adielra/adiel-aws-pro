@@ -110,7 +110,7 @@ def set_doc(frm_id):
     
     
 @application.route('/analyze/<bucket>/<image>', methods=['GET'])
-def analyze(bucket='my-upload-bucket-01', image='person.jpg'):
+def analyze(bucket='my-upload-adiel', image='floral.jpg'):
     return detect_labels(bucket, image)
 
 # curl localhost:5000/analyze/my-upload-bucket-01/person.jpg
@@ -147,7 +147,7 @@ def detect_labels(bucket, key, max_labels=10, min_confidence=50, region="us-east
 def compare_face(source_image, target_image):
     # change region and bucket accordingly
     region = 'us-east-1'
-    bucket_name = 'my-upload-bucket-01'
+    bucket_name = 'my-upload-adiel'
 	
     rekognition = boto3.client("rekognition", region)
     response = rekognition.compare_faces(
