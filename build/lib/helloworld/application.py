@@ -5,6 +5,7 @@ from helloworld.flaskrun import flaskrun
 import requests
 from flask_cors import CORS
 import boto3
+import datetime
 
 
 application = Flask(__name__)
@@ -114,7 +115,7 @@ def analyze(bucket='my-upload-adiel', image='floral.jpg'):
     return detect_labels(bucket, image)
 
 # curl localhost:5000/analyze/my-upload-bucket-01/person.jpg
-def detect_labels(bucket, key, max_labels=10, min_confidence=50, region="us-east-1"):
+def detect_labels(bucket, key, max_labels=3, min_confidence=98, region="us-east-1"):
     rekognition = boto3.client("rekognition", region)
     s3 = boto3.resource('s3', region_name = 'us-east-1')
 
@@ -142,6 +143,20 @@ def detect_labels(bucket, key, max_labels=10, min_confidence=50, region="us-east
 		MinConfidence=min_confidence,
 	)
 	'''
+@application.route('/upload_image', methods=['POST'])
+def uploadImage():
+    mybucket = 'my-upload-adiel'
+    filobject = request.files['img']
+    s3 = boto3.resource('s3', region_name='us-east-1')
+    date_time = datetime.date.now()
+    dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
+    filename = "%s.jpg" % dt_string
+    s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/jpeg'})
+    return {"imgName": filename}
+
+
+
+
 
 @application.route('/comp_face/<source_image>/<target_image>', methods=['GET'])
 def compare_face(source_image, target_image):
@@ -172,3 +187,5 @@ def compare_face(source_image, target_image):
 
 if __name__ == '__main__':
     flaskrun(application)
+
+
