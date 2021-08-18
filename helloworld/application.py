@@ -146,12 +146,12 @@ def detect_labels(bucket, key, max_labels=3, min_confidence=98, region="us-east-
 @application.route('/upload_image', methods=['POST'])
 def uploadImage():
     mybucket = 'my-upload-adiel'
-    filobject = request.files['img']
+    fileObj = request.files['img']
     s3 = boto3.resource('s3', region_name='us-east-1')
     date_time = datetime.date.now()
     dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
     filename = "%s.jpg" % dt_string
-    s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/jpeg'})
+    s3.Bucket(mybucket).upload_fileobj(fileObj, filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/jpeg'})
     return {"imgName": filename}
 
 
