@@ -148,7 +148,9 @@ def uploadImage():
     mybucket = 'my-upload-adiel'
     filobject = request.files['img']
     s3 = boto3.resource('s3', region_name='us-east-1')
-    filename = "%s.jpg" 
+    date_time = datetime.datetime.now()
+    dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
+    filename = "%s.jpg" % dt_string
     s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read','ContentType': 'image/jpeg'})
     return {"imgName": filename}
 
