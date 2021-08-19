@@ -151,7 +151,7 @@ def uploadImage():
     date_time = datetime.date.now()
     dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
     filename = "%s.jpg" % dt_string
-    s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read', 'ContentType': 'image/jpeg'})
+    s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read','ContentType': 'image/jpeg'})
     return {"imgName": filename}
 
 
