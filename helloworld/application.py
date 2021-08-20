@@ -152,7 +152,32 @@ def uploadImage():
     dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
     filename = "%s.jpg" % dt_string
     s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read','ContentType': 'image/jpeg'})
-    return {"imgName": filename}
+    
+    max_labels=3 
+    min_confidence=98 
+
+    
+    rekognition = boto3.client("rekognition", region_name='us-east-1')
+    s3 = boto3.resource('s3', region_name = 'us-east-1')
+    print(filename)
+    image = s3.Object(mybucket, filename) # Get an Image from S3
+    print(1)
+    img_data = image.get()['Body'].read() # Read the image
+
+    response = rekognition.detect_labels(
+        Image={
+            'Bytes': img_data
+        },
+        MaxLabels=max_labels,
+		MinConfidence=min_confidence,
+    )   
+   
+   
+   
+   
+   
+   
+    return json.dumps( {"imgName": filename,"response":(response['Labels'])} )
 
 
 
