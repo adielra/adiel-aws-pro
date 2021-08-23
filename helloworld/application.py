@@ -84,6 +84,23 @@ def get_frm():
     return Response(json.dumps(resp['Items']), mimetype='application/json', status=200)
 
 
+
+
+
+
+@application.route('/apiaddflower', methods=['POST'])
+def add_flower():
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    table = dynamodb.Table('flowers')
+    data = request.data
+    data_2 = json.loads(data)
+    date_time = datetime.datetime.now()
+    dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
+    f_id_id = dt_string
+    data_2['f_id'] = f_id_id 
+    table.put_item(Item=data_2)
+    return Response(json.dumps({'Output': 'Hello World'}), mimetype='application/json', status=200)
+
 # curl -i -X POST -d'{"form_title":"form title1", "form_body":"where is it?", "form_type":"finance"}' -H "Content-Type: application/json" http://localhost:5000/set_form/frm4
 @application.route('/set_form/<frm_id>', methods=['POST'])
 def set_doc(frm_id):
