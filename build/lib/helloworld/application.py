@@ -145,17 +145,23 @@ def detect_labels(bucket, key, max_labels=3, min_confidence=98, region="us-east-
 	'''
 @application.route('/upload_image', methods=['POST'])
 def uploadImage():
+    mybucket = 'my-upload-adiel'
+    filobject = request.files['img']
+    s3 = boto3.resource('s3', region_name='us-east-1')
+    date_time = datetime.datetime.now()
+    dt_string = date_time.strftime("%d-%m-%Y-%H-%M-%S")
+    filename = "%s.jpg" % dt_string
+    s3.Bucket(mybucket).upload_fileobj(filobject, filename, ExtraArgs={'ACL': 'public-read','ContentType': 'image/jpeg'})
     
     max_labels=3 
     min_confidence=98 
-    filename ="floral.jpg"
-    key = "https://my-upload-adiel.s3.amazonaws.com/%s" % filename
-    mybucket = 'my-upload-adiel'
+
     
     rekognition = boto3.client("rekognition", region_name='us-east-1')
     s3 = boto3.resource('s3', region_name = 'us-east-1')
-
-    image = s3.Object(mybucket, key) # Get an Image from S3
+    print(filename)
+    image = s3.Object(mybucket, filename) # Get an Image from S3
+    print(1)
     img_data = image.get()['Body'].read() # Read the image
 
     response = rekognition.detect_labels(

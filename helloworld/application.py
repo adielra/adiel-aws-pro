@@ -77,11 +77,11 @@ generic_data = [
 @application.route('/get_forms', methods=['GET'])
 def get_frm():
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-    table = dynamodb.Table('forms')
+    table = dynamodb.Table('flowers')
     # replace table scan
     resp = table.scan()
-    print(str(resp))
-    return Response(json.dumps(str(resp['Items'])), mimetype='application/json', status=200)
+  
+    return Response(json.dumps(resp['Items']), mimetype='application/json', status=200)
 
 
 # curl -i -X POST -d'{"form_title":"form title1", "form_body":"where is it?", "form_type":"finance"}' -H "Content-Type: application/json" http://localhost:5000/set_form/frm4
